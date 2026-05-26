@@ -1,15 +1,42 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import Auth from "./pages/Auth";
+
+import Dashboard from "./pages/Dashboard";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+
 function App() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <BrowserRouter>
 
-      <h1 className="text-4xl font-bold text-blue-600">
-        CloudOps Task Manager
-      </h1>
+      <Routes>
 
-    </div>
-  )
+        <Route
+          path="/"
+          element={<Auth />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
