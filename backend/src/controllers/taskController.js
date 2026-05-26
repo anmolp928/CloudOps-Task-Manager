@@ -72,18 +72,104 @@ const getTasks = async (req, res) => {
 
     const userId = req.user.id;
 
-    const tasks = await pool.query(
-      `
+    // Query params
+    const {
+      search,
+      priority,
+      completed,
+      sortBy,
+      order,
+      page = 1,
+      limit = 5,
+    } = req.query;
+
+
+    let query = `
       SELECT *
       FROM tasks
       WHERE user_id = $1
-      ORDER BY created_at DESC
-      `,
-      [userId]
+    `;
+
+    let values = [userId];
+
+    let index = 2;
+
+
+    // Search by title
+    if (search) {
+
+      query += ` AND title ILIKE $${index}`;
+
+      values.push(`%${search}%`);
+
+      index++;
+    }
+
+
+    // Filter by priority
+    if (priority) {
+
+      query += ` AND priority = $${index}`;
+
+      values.push(priority);
+
+      index++;
+    }
+
+
+    // Filter by completed status
+    if (completed !== undefined) {
+
+      query += ` AND completed = $${index}`;
+
+      values.push(completed === "true");
+
+      index++;
+    }
+
+
+    // Sorting
+    const allowedSortFields = [
+      "created_at",
+      "due_date",
+      "priority",
+    ];
+
+    const sortField = allowedSortFields.includes(sortBy)
+      ? sortBy
+      : "created_at";
+
+    const sortOrder =
+      order === "asc" ? "ASC" : "DESC";
+
+    query += `
+      ORDER BY ${sortField} ${sortOrder}
+    `;
+
+
+    // Pagination
+    const offset = (page - 1) * limit;
+
+    query += `
+      LIMIT $${index}
+      OFFSET $${index + 1}
+    `;
+
+    values.push(limit);
+    values.push(offset);
+
+
+    const tasks = await pool.query(
+      query,
+      values
     );
 
 
-    res.status(200).json(tasks.rows);
+    res.status(200).json({
+      total: tasks.rows.length,
+      page: Number(page),
+      tasks: tasks.rows,
+    });
 
   } catch (error) {
 
