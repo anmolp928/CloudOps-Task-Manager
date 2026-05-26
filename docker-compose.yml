@@ -1,0 +1,71 @@
+services:
+
+  postgres:
+
+    image: postgres:17
+
+    container_name: cloudops_postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 21234068
+      POSTGRES_DB: cloudops_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+  backend:
+
+    build: ./backend
+
+    container_name: cloudops_backend
+
+    restart: always
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - postgres
+
+    environment:
+      PORT: 5000
+      DB_USER: postgres
+      DB_HOST: postgres
+      DB_NAME: cloudops_db
+      DB_PASSWORD: 21234068
+      DB_PORT: 5432
+      JWT_SECRET: supersecretjwtkey
+
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+
+  frontend:
+
+    build: ./frontend
+
+    container_name: cloudops_frontend
+
+    restart: always
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+
+volumes:
+  postgres_data:
