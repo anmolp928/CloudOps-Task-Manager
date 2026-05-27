@@ -2,12 +2,6 @@ pipeline {
 
     agent any
 
-    environment {
-
-        FRONTEND_IMAGE = "anmolp20/cloudops-frontend:latest"
-        BACKEND_IMAGE = "anmolp20/cloudops-backend:latest"
-    }
-
     stages {
 
         stage('Clone Repository') {
@@ -20,44 +14,13 @@ pipeline {
         }
 
 
-        stage('Build Frontend Image') {
+        stage('Verify Files') {
 
             steps {
 
-                dir('frontend') {
-
-                    sh 'docker build -t $FRONTEND_IMAGE .'
-                }
-            }
-        }
-
-
-        stage('Build Backend Image') {
-
-            steps {
-
-                dir('backend') {
-
-                    sh 'docker build -t $BACKEND_IMAGE .'
-                }
-            }
-        }
-
-
-        stage('Push Frontend Image') {
-
-            steps {
-
-                sh 'docker push $FRONTEND_IMAGE'
-            }
-        }
-
-
-        stage('Push Backend Image') {
-
-            steps {
-
-                sh 'docker push $BACKEND_IMAGE'
+                sh 'ls -la'
+                sh 'ls frontend'
+                sh 'ls backend'
             }
         }
 
@@ -66,7 +29,7 @@ pipeline {
 
             steps {
 
-                sh 'kubectl apply -f k8s/'
+                sh 'echo Kubernetes deployment stage ready'
             }
         }
     }
