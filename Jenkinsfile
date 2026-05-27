@@ -13,7 +13,7 @@ pipeline {
         stage('Clone Repository') {
 
             steps {
-                git 'https://github.com/anmolp928/CloudOps-task-manager.git'
+                git branch: 'main', url: 'https://github.com/anmolp928/CloudOps-task-manager.git'
             }
         }
 
