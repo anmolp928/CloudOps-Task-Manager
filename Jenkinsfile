@@ -13,7 +13,9 @@ pipeline {
         stage('Clone Repository') {
 
             steps {
-                git branch: 'main', url: 'https://github.com/anmolp928/CloudOps-task-manager.git'
+
+                git branch: 'main',
+                url: 'https://github.com/anmolp928/CloudOps-task-manager.git'
             }
         }
 
@@ -24,7 +26,7 @@ pipeline {
 
                 dir('frontend') {
 
-                    bat 'docker build -t %FRONTEND_IMAGE% .'
+                    sh 'docker build -t $FRONTEND_IMAGE .'
                 }
             }
         }
@@ -36,7 +38,7 @@ pipeline {
 
                 dir('backend') {
 
-                    bat 'docker build -t %BACKEND_IMAGE% .'
+                    sh 'docker build -t $BACKEND_IMAGE .'
                 }
             }
         }
@@ -46,7 +48,7 @@ pipeline {
 
             steps {
 
-                bat 'docker push %FRONTEND_IMAGE%'
+                sh 'docker push $FRONTEND_IMAGE'
             }
         }
 
@@ -55,7 +57,7 @@ pipeline {
 
             steps {
 
-                bat 'docker push %BACKEND_IMAGE%'
+                sh 'docker push $BACKEND_IMAGE'
             }
         }
 
@@ -64,7 +66,7 @@ pipeline {
 
             steps {
 
-                bat 'kubectl apply -f k8s/'
+                sh 'kubectl apply -f k8s/'
             }
         }
     }
