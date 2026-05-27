@@ -3,6 +3,7 @@ kind: Ingress
 
 metadata:
   name: cloudops-ingress
+  namespace: cloudops
 
 spec:
 
@@ -26,15 +27,3 @@ spec:
 
                 port:
                   number: 80
-
-
-          - path: /api
-            pathType: Prefix
-
-            backend:
-
-              service:
-                name: backend-service
-
-                port:
-                  number: 5000

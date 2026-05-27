@@ -36,22 +36,37 @@ spec:
               value: "5000"
 
             - name: DB_HOST
-              value: postgres-service
+              valueFrom:
+                configMapKeyRef:
+                  name: cloudops-config
+                  key: DB_HOST
 
             - name: DB_USER
               value: postgres
 
             - name: DB_PASSWORD
-              value: "21234068"
+              valueFrom:
+                secretKeyRef:
+                  name: cloudops-secret
+                  key: POSTGRES_PASSWORD
 
             - name: DB_NAME
-              value: cloudops_db
+              valueFrom:
+                configMapKeyRef:
+                  name: cloudops-config
+                  key: DB_NAME
 
             - name: DB_PORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: cloudops-config
+                  key: DB_PORT
 
             - name: JWT_SECRET
-              value: supersecretjwtkey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudops-secret
+                  key: JWT_SECRET
 
           resources:
 

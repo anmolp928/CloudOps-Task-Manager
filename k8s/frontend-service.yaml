@@ -13,7 +13,7 @@ spec:
   ports:
 
     - protocol: TCP
-      port: 5173
-      targetPort: 5173
+      port: 80
+      targetPort: 80
 
   type: NodePort

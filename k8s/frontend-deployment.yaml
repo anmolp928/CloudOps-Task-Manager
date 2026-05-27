@@ -27,34 +27,24 @@ spec:
 
           image: anmolp20/cloudops-frontend:latest
 
-          command:
-            [
-              "npm",
-              "run",
-              "dev",
-              "--",
-              "--host",
-              "0.0.0.0"
-            ]
-
           ports:
-            - containerPort: 5173
+            - containerPort: 80
 
           resources:
 
             requests:
-              memory: "256Mi"
+              memory: "128Mi"
               cpu: "250m"
 
             limits:
-              memory: "512Mi"
+              memory: "256Mi"
               cpu: "500m"
 
           livenessProbe:
 
             httpGet:
               path: /
-              port: 5173
+              port: 80
 
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -64,7 +54,7 @@ spec:
 
             httpGet:
               path: /
-              port: 5173
+              port: 80
 
             initialDelaySeconds: 10
             periodSeconds: 5
